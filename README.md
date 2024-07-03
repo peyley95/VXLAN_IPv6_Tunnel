@@ -16,4 +16,13 @@ ip tunnel add 6to4_To_KH mode sit remote <<KHAREJ-IPV4>>
 ip -6 addr add fd00:155::1/64 dev 6to4_To_KH
 ip link set 6to4_To_KH mtu 1480
 ip link set 6to4_To_KH up
+```
 
+
+### سپس این دستورات را داخل سرور خارج اجرا کنید :
+```sh
+ip tunnel add 6to4_To_IR mode sit remote <<IRAN-IPV4>>
+ip -6 addr add fd00:155::2/64 dev 6to4_To_IR
+ip link set 6to4_To_IR mtu 1480
+ip link set 6to4_To_IR up
+```
