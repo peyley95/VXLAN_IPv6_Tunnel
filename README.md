@@ -48,16 +48,41 @@ ping6 fd00:155::1
 
 ## مرحله 2: ایجاد تانل VXLAN
 
-#### برای این کار در ابتدا باید پیش نیاز ها را روی هر دو سرور ایران و خارج نصب کنیم:
+### برای این کار در ابتدا باید پیش نیاز ها را روی هر دو سرور ایران و خارج نصب کنیم:
 ```shell
 sudo apt update
 sudo apt install iproute2
 sudo apt-get install -y iptables-persistent
 ```
 
-#### قبل از اینکه دستورات مربوط به تانل را بزنیم باید اسم شبکه را پیدا کنیم، برای اینکار از دستور زیر استفاده میکنیم:
+#### قبل از اینکه دستورات مربوط به تانل را بزنیم باید اسم شبکه را در هر سرور پیدا کنیم، برای اینکار از دستور زیر استفاده میکنیم:
 >برای مثال نام شبکه من در سرور ایران `eth0` ، و در سرور خارج `ens3` است.
 
 ```shell
 ls /sys/class/net/
+```
+
+### حالا دستورات مربوط به VXLAN رو اجرا میکنیم.
+
+
+#### دستورات سرور ایران :
+
+```sh
+sudo ip link add vxlan0 type vxlan id 3188 dstport 53 local fd00:155::1 remote fd00:155::2 dev eth0
+sudo ip link set vxlan0 mtu 1500
+sudo ip link set vxlan0 up
+sudo ip addr add 192.168.23.1/30 dev vxlan0
+sudo iptables -A INPUT -p udp --dport 53 -j ACCEPT
+sudo ip6tables -A INPUT -p udp --dport 53 -j ACCEPT
+```
+
+
+#### دستورات سرور خارج :
+```sh
+sudo ip link add vxlan0 type vxlan id 3188 dstport 53 local fd00:155::2 remote fd00:155::1 dev ens3
+sudo ip link set vxlan0 mtu 1500
+sudo ip link set vxlan0 up
+sudo ip addr add 192.168.23.2/30 dev vxlan0
+sudo iptables -A INPUT -p udp --dport 53 -j ACCEPT
+sudo ip6tables -A INPUT -p udp --dport 53 -j ACCEPT
 ```
