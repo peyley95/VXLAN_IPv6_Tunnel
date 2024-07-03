@@ -2,7 +2,7 @@
 
 > This project is only for personal learning. Don't abuse.
 
-# Setting Up a VXLAN Tunnel with Local IPv6
+# راه اندازی تانل VXLAN بین دو لینوکس با استفاده از IPv6
 
 ## مرحله 1: در ابتدا باید سرور ایران و خارج ما بتوانند از طریق IPv6 با یکدیگر ارتباط برقرار کنند
 
