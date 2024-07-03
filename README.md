@@ -54,3 +54,10 @@ sudo apt update
 sudo apt install iproute2
 sudo apt-get install -y iptables-persistent
 ```
+
+#### قبل از اینکه دستورات مربوط به تانل را بزنیم باید اسم شبکه را پیدا کنیم، برای اینکار از دستور زیر استفاده میکنیم:
+>برای مثال نام شبکه من در سرور ایران `eth0` ، و ئر سرور خارج `ens3` است.
+
+```shell
+ls /sys/class/net/
+```
