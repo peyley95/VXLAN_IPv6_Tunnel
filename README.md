@@ -10,3 +10,14 @@ Setting Up a VXLAN Tunnel with Local IPv6
 ```shell 
 
 ```
+# Setting Up a 6to4 Tunnel and VXLAN
+
+## Step 1: Establishing a 6to4 Tunnel
+
+### Iran Server:
+
+```sh
+ip tunnel add 6to4_To_KH mode sit remote 139.185.48.39
+ip -6 addr add fd00:155::1/64 dev 6to4_To_KH
+ip link set 6to4_To_KH mtu 1480
+ip link set 6to4_To_KH up
