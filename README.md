@@ -26,3 +26,5 @@ ip -6 addr add fd00:155::2/64 dev 6to4_To_IR
 ip link set 6to4_To_IR mtu 1480
 ip link set 6to4_To_IR up
 ```
+
+>راهنمایی : (در قسمت `<IPv4-KHAREJ>` ، آیپی ورژن 4 پابلیک سرور خارج رو قرار میدیم و در بخش `<IPv4-IRAN>` ، آیپی ورژن 4 پابلیک ایران رو قرار میدیم)
