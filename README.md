@@ -17,19 +17,19 @@
 #### دستورات سرور ایران :
 
 ```sh
-ip tunnel add 6to4_To_KH mode sit remote <<KHAREJ-IPV4>>
+ip tunnel add 6to4_IN mode sit remote <<KHAREJ-IPV4>>
 ip -6 addr add fd00:155::1/64 dev 6to4_To_KH
-ip link set 6to4_To_KH mtu 1480
-ip link set 6to4_To_KH up
+ip link set 6to4_IN mtu 1480
+ip link set 6to4_IN up
 ```
 
 
 #### دستورات سرور خارج :
 ```sh
-ip tunnel add 6to4_To_IR mode sit remote <<IRAN-IPV4>>
+ip tunnel add 6to4_OUT mode sit remote <<IRAN-IPV4>>
 ip -6 addr add fd00:155::2/64 dev 6to4_To_IR
-ip link set 6to4_To_IR mtu 1480
-ip link set 6to4_To_IR up
+ip link set 6to4_OUT mtu 1480
+ip link set 6to4_OUT up
 ```
 
 #### برای اطمینان از اینکه تانل برقرار شده باشه وارد هر دو سرور بشید و از آیپی سرور مقابل پینگ بگیرید.
@@ -110,3 +110,64 @@ iptables -t nat -A PREROUTING -j DNAT --to-destination 192.168.23.2
 iptables -t nat -A POSTROUTING -j MASQUERADE
 ```
 
+## ‌‌‌‌‌‌مرحله آخر: ذخیره کردن تانل و فعال سازی خودکار زمانی که سیستم ری استارت میشود
+بعد از ریبوت شدن سرور دستورات پاک میشوند ، در صورت نیاز مینوانید از دستورات زیر استفاده کنید : 
+
+**1. سرور ایران :**
+
+- با دستور زیر فایل rc.local رو باز میکنیم 
+```shell
+sudo nano /etc/rc.local && sudo chmod +x /etc/rc.local
+```
+
+- متن زیر را در فایل قرار میدیم و فایل رو ذخیره میکنیم : 
+```shell
+#! /bin/bash
+ip tunnel add 6to4_IN mode sit remote <<KHAREJ-IPV4>>
+ip -6 addr add fd00:155::1/64 dev 6to4_To_KH
+ip link set 6to4_IN mtu 1480
+ip link set 6to4_IN up
+
+sudo ip link add vxlan0 type vxlan id 3188 dstport 53 local fd00:155::1 remote fd00:155::2 dev eth0
+sudo ip link set vxlan0 mtu 1500
+sudo ip link set vxlan0 up
+sudo ip addr add 192.168.23.1/30 dev vxlan0
+sudo iptables -A INPUT -p udp --dport 53 -j ACCEPT
+sudo ip6tables -A INPUT -p udp --dport 53 -j ACCEPT
+
+sysctl net.ipv4.ip_forward=1
+iptables -t nat -A PREROUTING -p tcp --dport 22 -j DNAT --to-destination 192.168.23.1
+iptables -t nat -A PREROUTING -j DNAT --to-destination 192.168.23.2
+iptables -t nat -A POSTROUTING -j MASQUERADE 
+
+exit 0
+```
+
+**2. سرور خارج :**
+
+
+
+- با دستور زیر فایل rc.local رو باز میکنیم 
+```shell
+sudo nano /etc/rc.local && sudo chmod +x /etc/rc.local
+```
+
+- متن زیر را در فایل قرار میدیم و فایل رو ذخیره میکنیم : 
+```shell
+#! /bin/bash
+ip tunnel add 6to4_OUT mode sit remote <<IRAN-IPV4>>
+ip -6 addr add fd00:155::2/64 dev 6to4_To_IR
+ip link set 6to4_OUT mtu 1480
+ip link set 6to4_OUT up
+
+sudo ip link add vxlan0 type vxlan id 3188 dstport 53 local fd00:155::2 remote fd00:155::1 dev ens3
+sudo ip link set vxlan0 mtu 1500
+sudo ip link set vxlan0 up
+sudo ip addr add 192.168.23.2/30 dev vxlan0
+sudo iptables -A INPUT -p udp --dport 53 -j ACCEPT
+sudo ip6tables -A INPUT -p udp --dport 53 -j ACCEPT
+
+exit 0
+```
+
+بعد از reboot کردن سیستم تغییرات اعمال خواهند شد.
