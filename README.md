@@ -124,7 +124,7 @@ sudo nano /etc/rc.local && sudo chmod +x /etc/rc.local
 ```shell
 #! /bin/bash
 ip tunnel add 6to4_IN mode sit remote <<KHAREJ-IPV4>>
-ip -6 addr add fd00:155::1/64 dev 6to4_To_KH
+ip -6 addr add fd00:155::1/64 dev 6to4_IN
 ip link set 6to4_IN mtu 1480
 ip link set 6to4_IN up
 
@@ -156,7 +156,7 @@ sudo nano /etc/rc.local && sudo chmod +x /etc/rc.local
 ```shell
 #! /bin/bash
 ip tunnel add 6to4_OUT mode sit remote <<IRAN-IPV4>>
-ip -6 addr add fd00:155::2/64 dev 6to4_To_IR
+ip -6 addr add fd00:155::2/64 dev 6to4_OUT
 ip link set 6to4_OUT mtu 1480
 ip link set 6to4_OUT up
 
