@@ -41,3 +41,16 @@ ping6 fd00:155::2
 ```shell
 ping6 fd00:155::1
 ```
+
+
+
+
+
+## مرحله 2: ایجاد تانل VXLAN
+
+#### برای این کار در ابتدا باید پیش نیاز ها را روی هر دو سرور ایران و خارج نصب کنیم:
+```shell
+sudo apt update
+sudo apt install iproute2
+sudo apt-get install -y iptables-persistent
+```
