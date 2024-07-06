@@ -1,4 +1,4 @@
-# VXLAN_6to4
+# VXLAN_6to4_Tunnel
 
 > This project is only for personal learning. Don't abuse.
 
