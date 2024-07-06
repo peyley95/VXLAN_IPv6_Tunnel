@@ -172,3 +172,23 @@ exit 0
 ```
 
 بعد از reboot کردن سیستم تغییرات اعمال خواهند شد.
+
+
+## ‌‌‌‌‌‌نحوه تانل زدن یک Ubuntu خارج به روتر میکروتیک:
+
+#### روی سرور خارج به جز دستورات بالا باید دستور زیر را نیز وارد کنیم: 
+>مهم: اسم شبکه را باید با توجه به سرور خودتان تغییر دهید. در اینجا `ens3` است. (خط سوم)
+
+```sh
+echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward
+sudo sysctl -w net.ipv4.ip_forward=1
+sudo iptables -t nat -A POSTROUTING -o ens3 -j MASQUERADE
+sudo sh -c "iptables-save > /etc/iptables/rules.v4"
+```
+#### داخل میکروتیک هم دستورات زیر را وارد کنید:
+
+
+```sh
+/interface vxlan add name=vxlan1 mtu=1500 vni=3188 dst-port=53 ipv6=yes local-address=fd00:155::1 remote-address=fd00:155::2
+/interface vxlan set [find name=vxlan1] disabled=no
+```
