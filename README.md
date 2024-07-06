@@ -189,6 +189,6 @@ sudo sh -c "iptables-save > /etc/iptables/rules.v4"
 
 
 ```sh
-/interface vxlan add name=vxlan1 mtu=1500 vni=3188 dst-port=53 ipv6=yes local-address=fd00:155::1 remote-address=fd00:155::2
+/interface vxlan add name=vxlan1 mtu=1280 vni=3188 dst-port=53 ipv6=yes local-address=fd00:155::1 remote-address=fd00:155::2
 /interface vxlan set [find name=vxlan1] disabled=no
 ```
