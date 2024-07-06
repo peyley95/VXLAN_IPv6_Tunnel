@@ -77,7 +77,7 @@ ls /sys/class/net/
 
 ```sh
 sudo ip link add vxlan0 type vxlan id 3188 dstport 53 local fd00:155::1 remote fd00:155::2 dev eth0
-sudo ip link set vxlan0 mtu 1500
+sudo ip link set vxlan0 mtu 1280
 sudo ip link set vxlan0 up
 sudo ip addr add 192.168.23.1/30 dev vxlan0
 sudo iptables -A INPUT -p udp --dport 53 -j ACCEPT
@@ -88,7 +88,7 @@ sudo ip6tables -A INPUT -p udp --dport 53 -j ACCEPT
 #### دستورات سرور خارج :
 ```sh
 sudo ip link add vxlan0 type vxlan id 3188 dstport 53 local fd00:155::2 remote fd00:155::1 dev ens3
-sudo ip link set vxlan0 mtu 1500
+sudo ip link set vxlan0 mtu 1280
 sudo ip link set vxlan0 up
 sudo ip addr add 192.168.23.2/30 dev vxlan0
 sudo iptables -A INPUT -p udp --dport 53 -j ACCEPT
@@ -130,7 +130,7 @@ ip link set 6to4_IN mtu 1480
 ip link set 6to4_IN up
 
 sudo ip link add vxlan0 type vxlan id 3188 dstport 53 local fd00:155::1 remote fd00:155::2 dev eth0
-sudo ip link set vxlan0 mtu 1500
+sudo ip link set vxlan0 mtu 1280
 sudo ip link set vxlan0 up
 sudo ip addr add 192.168.23.1/30 dev vxlan0
 sudo iptables -A INPUT -p udp --dport 53 -j ACCEPT
@@ -162,7 +162,7 @@ ip link set 6to4_OUT mtu 1480
 ip link set 6to4_OUT up
 
 sudo ip link add vxlan0 type vxlan id 3188 dstport 53 local fd00:155::2 remote fd00:155::1 dev ens3
-sudo ip link set vxlan0 mtu 1500
+sudo ip link set vxlan0 mtu 1280
 sudo ip link set vxlan0 up
 sudo ip addr add 192.168.23.2/30 dev vxlan0
 sudo iptables -A INPUT -p udp --dport 53 -j ACCEPT
